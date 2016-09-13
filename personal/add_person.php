@@ -119,9 +119,9 @@ if(isset($method)=='edit'){
                 <div class="col-lg-3 col-xs-12"> 
                 <label>ชื่อหมู่บ้าน &nbsp;</label>
                 <input value='<?php if(isset($_REQUEST['method'])){ echo $edit_person['baan'];}?>' type="text" class="form-control" name="hname" id="hname" placeholder="ชื่อหมู่บ้าน" onkeydown="return nextbox(event, 'postcode')">
-                </div></div><?php include_once 'js/address.php';?>
-                    <div class="row">
-                    
+                </div></div>
+                <div class="row">
+                <?php include_once 'js/address.php';?>
                 <div class="col-lg-3 col-xs-12"> 
                 <label>รหัสไปรษณีย์ &nbsp;</label>
                 <input value='<?php if(isset($_REQUEST['method'])){ echo $edit_person['zipcode'];}?>' type="text" class="form-control" name="postcode" id="postcode" placeholder="รหัสไปรษณีย์" maxlength="5" onkeydown="return nextbox(event, 'status')" onKeyUp="javascript:inputDigits(this);">
@@ -138,8 +138,8 @@ if(isset($method)=='edit'){
                                 //$conn_DB2->close_mysqli();
 				 echo "<option value=''>--สถานะภาพ--</option>";
 				 for($i=0;$i<count($result);$i++){
-                    if($result[$i]['mstatus_id']==$edit_person[0]['mstatus_id']){$selected='selected';}else{$selected='';}
-				echo "<option value='".$result[$i]['mstatus_id']."' $selected>".$result[$i]['mstatus']." </option>";
+                    if($result[$i]['status']==$edit_person[0]['status']){$selected='selected';}else{$selected='';}
+				echo "<option value='".$result[$i]['status']."' $selected>".$result[$i]['statusname']." </option>";
 				 } ?>
 			 </select>
 			 </div>
@@ -170,7 +170,8 @@ if(isset($method)=='edit'){
 </div>
     <div class="row">
           <div class="col-lg-12">
-              <div class="box box-primary box-solid collapsed-box">
+              <div class="box box-primary box-solid">
+              <!--<div class="box box-primary box-solid collapsed-box">-->
                 <div class="box-header with-border">
                   <h3 class="box-title"><img src='images/work.ico' width='25'> ข้อมูลการปฏิบัติงาน</h3>
                   <div class="box-tools pull-right">

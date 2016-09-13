@@ -30,7 +30,7 @@ function Check_txt(){
 	}
 }
 </script>
-    <div class="form-group"> 
+    <div class="form-group col-lg-3 col-xs-12"> 
                     <label> จังหวัด &nbsp;</label>
 	<select class="form-control select2" name='province' id='province' onchange="data_show(this.value,'amphur');">
 		<option value="">---โปรดเลือกจังหวัด---</option>
@@ -44,7 +44,7 @@ function Check_txt(){
 		}?>
 	</select>
     </div>
-      <div class="form-group">
+      <div class="form-group col-lg-3 col-xs-12">
         <label> อำเภอ &nbsp;</label>
 	<select class="form-control select2" name='amphur' id='amphur'onchange="data_show(this.value,'district');">
             <?php if(isset($method)=='edit'){
@@ -60,7 +60,7 @@ function Check_txt(){
             <?php }?>
 	</select>
 	</div>
-        <div class="form-group">
+        <div class="form-group col-lg-3 col-xs-12">
         <label> ตำบล &nbsp;</label>  
 	<select class="form-control select2" name='district' id='district'>
             <?php if(isset($method)=='edit'){
