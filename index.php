@@ -1,4 +1,4 @@
-<?php require 'header.php'; ?>
+<?php require 'up_header.php'; require 'header.php'; require 'menu.php';?>
 <!-- Content Header (Page header) -->
 <?php
 if (isset($_SESSION['user'])) {
@@ -25,8 +25,8 @@ if (isset($_SESSION['user'])) {
             $conn_DB1 = new EnDeCode();
             $read = "connection/conn_DB.txt";
             $conn_DB1->para_read($read);
-            $conn_DB1->conn_PDO();
-            $db=$conn_DB1->getDb();
+            $db=$conn_DB1->conn_PDO();
+            $conn_DB1->getDb();
             $conn_DB1->imp_sql($sql);
             $comm = $conn_DB1->select('');
             $conn_DB1->close_PDO();

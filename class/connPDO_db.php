@@ -29,13 +29,12 @@ class connPDO_db extends read_conn{
         $char=$this->dbconfig["charector_set"];
         
         try {  
-            $this->db = new PDO('mysql:host='.$host.';port='.$port.';dbname='.$database.';charset=utf8',''.$user.'',''.$pass.'');
+            $this->db = new PDO('mysql:host='.$host.';port='.$port.';dbname='.$database.';charset=utf8',$user,$pass);
             $this->db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );  
 
         return $this->db;
     }
     catch(PDOException $e) {  
-
      echo 'ERROR: ' . $e->getMessage();
      return $this->db=FALSE;
     }   
