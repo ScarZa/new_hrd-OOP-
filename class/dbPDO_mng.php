@@ -24,8 +24,31 @@ class dbPDO_mng extends ConnPDO_db{
 		}
     }
 
+//    ฟังก์ชัน select ข้อมูลในฐานข้อมูลมาแสดงกรณีมีเงื่อนไขหรือมีแค่ record เดียว
+    function select_a($execute=null) {
+        
+        $this->execute=$execute;
+        $this->db=$this->conn_PDO();
+        $result = array();
+        try
+		{
+        $data = $this->db->prepare($this->sql);
+        if(!empty($execute)){ $data->execute($this->execute);}else{ $data->execute();}
+                } catch(PDOException $e)
+		{
+			echo $e->getMessage();	
+			return false;
+		}
+                if($data->rowCount()>0)
+		{
+        while ($data_out = $data->fetch(PDO::FETCH_ASSOC)) {
+            $result = $data_out;
+                }
+                       }
+        return $result;
+    }
 //    ฟังก์ชัน select ข้อมูลในฐานข้อมูลมาแสดง
-    function select($execute) {
+    function select($execute=null) {
         
         $this->execute=$execute;
         $this->db=$this->conn_PDO();
@@ -47,7 +70,6 @@ class dbPDO_mng extends ConnPDO_db{
                        }
         return $result;
     }
-
 //    ฟังก์ชันสำหรับการ insert ข้อมูล
     function insert($table, $data) {
         $this->table = $table;

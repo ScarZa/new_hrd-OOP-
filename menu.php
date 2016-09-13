@@ -39,12 +39,12 @@
                                                         INNER JOIN department d1 on em.depid=d1.depId
                                                         WHERE empno='$user_id'";
                                         $conn_DB->imp_sql($sql);
-                                      $result=$conn_DB->select('');
+                                      $result=$conn_DB->select_a();
                                       //$conn_DB->close_PDO();
                                       
-                                      $empno_photo=$result[0]['photo'];
-                                      $posname=$result[0]['posname'];
-                                      $depname=$result[0]['depName'];
+                                      $empno_photo=$result['photo'];
+                                      $posname=$result['posname'];
+                                      $depname=$result['depName'];
                                         if (empty($empno_photo)) {
                                     $photo = 'person.png';
                                     $fold = "images/";

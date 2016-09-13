@@ -13,9 +13,9 @@ if($db != FALSE){
 //===ชื่อกลุ่ม
                     $sql = "select * from  hospital order by hospital limit 1";
                     $conn_DB->imp_sql($sql);
-                    $resultComm=$conn_DB->select('');
-                    if (!empty($resultComm[0]['logo'])) {
-                                    $pic = $resultComm[0]['logo'];
+                    $resultComm=$conn_DB->select_a();
+                    if (!empty($resultComm['logo'])) {
+                                    $pic = $resultComm['logo'];
                                     $fol = "logo/";
                                 } else {
                                     $pic = 'agency.ico';
