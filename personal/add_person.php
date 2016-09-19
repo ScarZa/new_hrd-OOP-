@@ -17,26 +17,30 @@
         </section>
     <section class="content">
 <?php
+ 
+                                $conn_DB2= new DbPDO_mng();
+                                $read="connection/conn_DB.txt";
+                                $conn_DB2->para_read($read);
+                                $conn_DB2->conn_PDO();
 if(isset($method)=='edit'){
         
-                                $conn_DB1= new EnDeCode();
-                                $read="connection/conn_DB.txt";
-                                $conn_DB1->para_read($read);
-                                $conn_DB1->conn_PDO();
+                                //$conn_DB1= new EnDeCode();
+                                //$read="connection/conn_DB.txt";
+                                //$conn_DB1->para_read($read);
+                                //$conn_DB1->conn_PDO();
         $eid=filter_input(INPUT_GET,'id');
-        $edit_id=$conn_DB1->sslDec($eid);
+        $edit_id=$conn_DB2->sslDec($eid);
         $sql="select * from emppersonal e1 left outer join educate e2 on e1.empno=e2.empno
             where e1.empno='$edit_id'";
-        $conn_DB1->imp_sql($sql);
-                                $edit_person=$conn_DB1->select('');
-                                $conn_DB1->close_PDO();
+        $conn_DB2->imp_sql($sql);
+                                $edit_person=$conn_DB2->select('');
+                                $conn_DB2->close_PDO();
 }
 ?>
 <form class="" role="form" action='process/prcperson.php' enctype="multipart/form-data" method='post' onSubmit="return Check_txt()">
 <div class="row">
           <div class="col-lg-12">
-              <div class="box box-success box-solid">
-                  <!--<div class="box box-success box-solid collapsed-box">-->
+                <div class="box box-success box-solid collapsed-box">
                 <div class="box-header with-border">
                   <h3 class="box-title"><img src='images/phonebook.ico' width='25'> ข้อมูลทั่วไป</h3>
                   <div class="box-tools pull-right">
@@ -56,19 +60,15 @@ if(isset($method)=='edit'){
                     <div class="row">
                     <div class="col-lg-2 col-xs-6">
          			<label>คำนำหน้า &nbsp;</label>
- 				<select name="pname" id="pname" required  class="form-control select2"  onkeydown="return nextbox(event, 'fname');"> 
+ 				<select name="pname" id="pname" required  class="form-control select2" data-placeholder="คำนำหน้า" style="width: 100%;" onkeydown="return nextbox(event, 'fname');"> 
 				<?php	$sql = "SELECT *  FROM pcode order by pname";
-                                $conn_DB2= new DbPDO_mng();
-                                $read="connection/conn_DB.txt";
-                                $conn_DB2->para_read($read);
-                                $conn_DB2->conn_PDO();
                                 $conn_DB2->imp_sql($sql);
-                                $result=$conn_DB2->select('');
+                                $result=$conn_DB2->select();
                                 //$conn_DB2->close_mysqli();
 				 echo "<option value=''>--คำนำหน้า--</option>";
 				 for($i=0;$i<count($result);$i++){
-                                if($result[$i]['pname_id']==$edit_person[0]['pname_id']){$selected='selected';}else{$selected='';}
-				echo "<option value='".$result[$i]['pname_id']."' $selected>".$result[$i]['pname']." </option>";
+                                if($result[$i]['pcode']==$edit_person[0]['pcode']){$selected='selected';}else{$selected='';}
+				echo "<option value='".$result[$i]['pcode']."' $selected>".$result[$i]['pname']." </option>";
 				 } ?> 
 			 </select>
 			 </div>
@@ -101,14 +101,13 @@ if(isset($method)=='edit'){
 			 </div>
                 <div class="col-lg-2 col-xs-6"> 
                 <label>วันเดือนปีเกิด &nbsp;</label>
-                <?php include 'plugins/DatePickerS/index.php';?>
                 <?php
  		if(isset($_GET['method'])){
  			$take_date=$edit_person['birthdate'];
  			edit_date($take_date);
                         }
  		?>
-                <input name="bday" type="text" id="datepicker-th"  placeholder='รูปแบบ 22/07/2557' class="form-control" value="<?php if(isset($_GET['method'])){echo $take_date;}?>" required>
+                <p><input name="bday" type="text" id="datepicker"  placeholder='รูปแบบ 22/07/2557' class="form-control" value="<?php if(isset($_GET['method'])){echo $take_date;}?>" required></p>
                 </div>
                     </div>
                     <div class="row">
@@ -130,11 +129,11 @@ if(isset($method)=='edit'){
                     <div class="row">
                 <div class="col-lg-3 ol-xs-12">
          			<label>สถานะภาพ &nbsp;</label>
- 				<select name="status" id="status" required  class="form-control"  onkeydown="return nextbox(event, 'htell');"> 
+ 				<select name="status" id="status" required  class="form-control select2" data-placeholder="สถานะภาพ"  style="width: 100%;" onkeydown="return nextbox(event, 'htell');"> 
 				<?php	$sql = "SELECT *  FROM empstatus order by status";
                                 //$conn_DB2->conn_mysqli();
                                 $conn_DB2->imp_sql($sql);
-                                $result=$conn_DB2->select('');
+                                $result=$conn_DB2->select();
                                 //$conn_DB2->close_mysqli();
 				 echo "<option value=''>--สถานะภาพ--</option>";
 				 for($i=0;$i<count($result);$i++){
@@ -170,8 +169,7 @@ if(isset($method)=='edit'){
 </div>
     <div class="row">
           <div class="col-lg-12">
-              <div class="box box-primary box-solid">
-              <!--<div class="box box-primary box-solid collapsed-box">-->
+              <div class="box box-primary box-solid collapsed-box">
                 <div class="box-header with-border">
                   <h3 class="box-title"><img src='images/work.ico' width='25'> ข้อมูลการปฏิบัติงาน</h3>
                   <div class="box-tools pull-right">
@@ -187,66 +185,80 @@ if(isset($method)=='edit'){
                   <div class="col-lg-3 ol-xs-12">
                       <div class="form-group">
          			<label>ตำแหน่ง &nbsp;</label>
- 				<select name="position" id="position" required  class="form-control select2"  data-placeholder="Select a State"  style="width: 100%;" onkeydown="return nextbox(event, 'dep');"> 
-				<?php include 'connection/connect.php';
-                                $sql = mysqli_query($db,"SELECT *  FROM posid order by posId");
+ 				<select name="position" id="position" required  class="form-control select2"  data-placeholder="ตำแหน่ง"  style="width: 100%;" onkeydown="return nextbox(event, 'dep');"> 
+				<?php 
+                                $sql = "SELECT *  FROM posid order by posId";
+                                $conn_DB2->imp_sql($sql);
+                                $result=$conn_DB2->select('');
 				 echo "<option value=''>--ตำแหน่ง--</option>";
-				 while( $result = mysqli_fetch_assoc( $sql ) ){
-          if($result['posId']==$edit_person['posid']){$selected='selected';}else{$selected='';}
-				 echo "<option value='".$result['posId']."' $selected>".$result['posname']." </option>";
-				 } $db->close(); ?>
+				 for($i=0;$i<count($result);$i++){
+          if($result[$i]['posId']==$edit_person[0]['posid']){$selected='selected';}else{$selected='';}
+				 echo "<option value='".$result[$i]['posId']."' $selected>".$result[$i]['posname']." </option>";
+				 } ?>
 			 </select>
                       </div></div>
                     <div class="col-lg-3 ol-xs-12">
+                        <div class="form-group">
          			<label>ฝ่ายงาน &nbsp;</label>
- 				<select name="dep" id="dep" required  class="form-control select2"  onkeydown="return nextbox(event, 'line');"> 
-				<?php  include 'connection/connect.php';
-                                $sql = mysqli_query($db,"SELECT *  FROM department order by depId");
+ 				<select name="dep" id="dep" required  class="form-control select2"  data-placeholder="ฝ่ายงาน"  style="width: 100%;" onkeydown="return nextbox(event, 'line');"> 
+				<?php 
+                                $sql = "SELECT *  FROM department order by depId";
+                                $conn_DB2->imp_sql($sql);
+                                $result=$conn_DB2->select('');
 				 echo "<option value=''>--ฝ่ายงาน--</option>";
-				 while( $result = mysqli_fetch_assoc( $sql ) ){
-          if($result['depId']==$edit_person['depid']){$selected='selected';}else{$selected='';}
-				 echo "<option value='".$result['depId']."' $selected>".$result['depName']." </option>";
-				 } $db->close();?>
-			 </select></div>
+				 for($i=0;$i<count($result);$i++){
+          if($result[$i]['depId']==$edit_person[0]['depid']){$selected='selected';}else{$selected='';}
+				 echo "<option value='".$result[$i]['depId']."' $selected>".$result[$i]['depName']." </option>";
+				 } ?>
+                                </select></div></div>
                     <div class="col-lg-3 ol-xs-12">
                         <div class="form-group">
+                            <div class="form-group">
          			<label>สายงาน &nbsp;</label>
- 				<select name="line" id="line" required  class="form-control select2"  onkeydown="return nextbox(event, 'pertype');"> 
-				<?php  include 'connection/connect.php';
-                                $sql = mysqli_query($db,"SELECT *  FROM empstuc order by Emstuc");
+ 				<select name="line" id="line" required  class="form-control select2"  data-placeholder="สายงาน"  style="width: 100%;"  onkeydown="return nextbox(event, 'pertype');"> 
+				<?php  
+                                $sql = "SELECT *  FROM empstuc order by Emstuc";
+                                $conn_DB2->imp_sql($sql);
+                                $result=$conn_DB2->select('');
 				 echo "<option value=''>--สายงาน--</option>";
-				 while( $result = mysqli_fetch_assoc( $sql ) ){
-          if($result['Emstuc']==$edit_person['empstuc']){$selected='selected';}else{$selected='';}
-				 echo "<option value='".$result['Emstuc']."' $selected>".$result['StucName']." </option>";
-				 } $db->close();?>
+				 for($i=0;$i<count($result);$i++){
+          if($result[$i]['Emstuc']==$edit_person[0]['empstuc']){$selected='selected';}else{$selected='';}
+				 echo "<option value='".$result[$i]['Emstuc']."' $selected>".$result[$i]['StucName']." </option>";
+				 } ?>
 			 </select>
-                        </div>
+                            </div></div>
                     </div></div>
                     <div class="row">
                     <div class="col-lg-3 ol-xs-12">
+                        <div class="form-group">
          			<label>ประเภทพนักงาน &nbsp;</label>
- 				<select name="pertype" id="pertype" required  class="form-control"  onkeydown="return nextbox(event, 'educat');"> 
-				<?php  include 'connection/connect.php';
-                                $sql = mysqli_query($db,"SELECT *  FROM emptype order by EmpType");
+ 				<select name="pertype" id="pertype" required  class="form-control select2" data-placeholder="ประเภทพนักงาน"  style="width: 100%;" onkeydown="return nextbox(event, 'educat');"> 
+				<?php 
+                                $sql = "SELECT *  FROM emptype order by EmpType";
+                                $conn_DB2->imp_sql($sql);
+                                $result=$conn_DB2->select('');
 				 echo "<option value=''>--ประเภทพนักงาน--</option>";
-				 while( $result = mysqli_fetch_assoc( $sql ) ){
-          if($result['EmpType']==$edit_person['emptype']){$selected='selected';}else{$selected='';}
-				 echo "<option value='".$result['EmpType']."' $selected>".$result['TypeName']." </option>";
-				 } $db->close(); ?>
+				 for($i=0;$i<count($result);$i++){
+          if($result[$i]['EmpType']==$edit_person[0]['emptype']){$selected='selected';}else{$selected='';}
+				 echo "<option value='".$result[$i]['EmpType']."' $selected>".$result[$i]['TypeName']." </option>";
+				 } ?>
 			 </select>
-			 </div>
+                        </div></div>
                     <div class="col-lg-3 ol-xs-12">
+                        <div class="form-group">
          			<label>วุฒิการศึกษาที่บรรจุ &nbsp;</label>
- 				<select name="educat" id="educat" required  class="form-control"  onkeydown="return nextbox(event, 'swday');"> 
-				<?php  include 'connection/connect.php';
-                                $sql = mysqli_query($db,"SELECT *  FROM education order by education");
+ 				<select name="educat" id="educat" required  class="form-control select2" data-placeholder="วุฒิการศึกษาที่บรรจุ"  style="width: 100%;" onkeydown="return nextbox(event, 'swday');"> 
+				<?php
+                                $sql = "SELECT *  FROM education order by education";
+                                $conn_DB2->imp_sql($sql);
+                                $result=$conn_DB2->select('');
 				 echo "<option value=''>--วุฒิการศึกษาที่บรรจุ--</option>";
-				 while( $result = mysqli_fetch_assoc( $sql ) ){
-          if($result['education']==$edit_person['education']){$selected='selected';}else{$selected='';}
-				 echo "<option value='".$result['education']."' $selected>".$result['eduname']." </option>";
-				 } $db->close(); ?>
+				 for($i=0;$i<count($result);$i++){
+          if($result[$i]['education']==$edit_person[0]['education']){$selected='selected';}else{$selected='';}
+				 echo "<option value='".$result[$i]['education']."' $selected>".$result[$i]['eduname']." </option>";
+				 } ?>
 			 </select>
-			 </div>
+                        </div></div>
                     <div class="col-lg-3 ol-xs-12"> 
                 <label>วันที่เริ่มปฏิบัติงาน &nbsp;</label>
                 <?php
@@ -255,7 +267,7 @@ if(isset($method)=='edit'){
  			edit_date($dateBegin);
                         }
  		?>
-                <input value='<?php if(isset($_REQUEST['method'])){ echo $dateBegin;}?>' type="text" id="datepicker-th-2"  placeholder='รูปแบบ 22/07/2557' class="form-control" name="swday" id="swday" onkeydown="return nextbox(event, 'teducat')">
+                <input value='<?php if(isset($_REQUEST['method'])){ echo $dateBegin;}?>' type="text" id="datepicker2"  placeholder='รูปแบบ 22/07/2557' class="form-control" name="swday" id="swday" onkeydown="return nextbox(event, 'teducat')">
                     </div></div>
                 </div>
               </div>
@@ -273,17 +285,20 @@ if(isset($method)=='edit'){
                 <div class="box-body">
                     <div class="row">
                     <div class="col-lg-3 ol-xs-12">
+                        <div class="form-group">
          			<label>วุฒิการศึกษา &nbsp;</label>
- 				<select name="teducat" id="teducat" class="form-control"  onkeydown="return nextbox(event, 'major');"> 
-				<?php  include 'connection/connect.php';
-                                $sql = mysqli_query($db,"SELECT *  FROM education order by education");
+ 				<select name="teducat" id="teducat" class="form-control select2" data-placeholder="วุฒิการศึกษา"  style="width: 100%;"  onkeydown="return nextbox(event, 'major');"> 
+				<?php 
+                                $sql = "SELECT *  FROM education order by education";
+                                $conn_DB2->imp_sql($sql);
+                                $result=$conn_DB2->select('');
 				 echo "<option value=''>--วุฒิการศึกษา--</option>";
-				 while( $result = mysqli_fetch_assoc( $sql ) ){
-          if($result['education']==$edit_person['educate']){$selected='selected';}else{$selected='';}
-				 echo "<option value='".$result['education']."' $selected>".$result['eduname']." </option>";
-				 } $db->close(); ?>
+				 for($i=0;$i<count($result);$i++){
+          if($result[$i]['education']==$edit_person[0]['educate']){$selected='selected';}else{$selected='';}
+				 echo "<option value='".$result[$i]['education']."' $selected>".$result[$i]['eduname']." </option>";
+				 } ?>
 			 </select>
-			 </div>
+                        </div></div>
                     <div class="col-lg-3 ol-xs-12"> 
                 <label>สาขา/วิชาเอก &nbsp;</label>
                 <input value='<?php if(isset($_REQUEST['method'])){ echo $edit_person['major'];}?>' type="text" class="form-control" name="major" id="major" placeholder="สาขา/วิชาเอก" onkeydown="return nextbox(event, 'inst')">
@@ -300,7 +315,7 @@ if(isset($method)=='edit'){
  			edit_date($enddate);
                         }
  		?>
-                <input value='<?php if(isset($_REQUEST['method'])){ echo $enddate;}?>' type="text" id="datepicker-th-3"  placeholder='รูปแบบ 22/07/2557' class="form-control" name="Graduation" id="Graduation" onkeydown="return nextbox(event, 'statusw')">
+                <input value='<?php if(isset($_REQUEST['method'])){ echo $enddate;}?>' type="text" id="datepicker3"  placeholder='รูปแบบ 22/07/2557' class="form-control" name="Graduation" id="Graduation" onkeydown="return nextbox(event, 'statusw')">
                     
                     </div></div>
                 </div>
@@ -320,17 +335,20 @@ if(isset($method)=='edit'){
                 <div class="box-body">
                     <div class="row">
                     <div class="col-lg-3 ol-xs-12">
+                        <div class="form-group">
          			<label>สถานะการทำงาน &nbsp;</label>
- 				<select name="statusw" id="statusw" required  class="form-control"  onkeydown="return nextbox(event, 'reason');"> 
-				<?php  include 'connection/connect.php';
-                                $sql = mysqli_query($db,"SELECT *  FROM emstatus order by statusid");
+ 				<select name="statusw" id="statusw" required  class="form-control select2" data-placeholder="สถานะการทำงาน"  style="width: 100%;" onkeydown="return nextbox(event, 'reason');"> 
+				<?php 
+                                $sql = "SELECT *  FROM emstatus order by statusid";
+                                $conn_DB2->imp_sql($sql);
+                                $result=$conn_DB2->select('');
 				 echo "<option value=''>--สถานะการทำงาน--</option>";
-				 while( $result = mysqli_fetch_assoc( $sql ) ){
-          if($result['statusid']==$edit_person['status']){$selected='selected';}else{$selected='';}
-				 echo "<option value='".$result['statusid']."'$selected>".$result['statusname']." </option>";
-				 } $db->close(); ?>
+				 for($i=0;$i<count($result);$i++){
+          if($result[$i]['statusid']==$edit_person[0]['status']){$selected='selected';}else{$selected='';}
+				 echo "<option value='".$result[$i]['statusid']."'$selected>".$result[$i]['statusname']." </option>";
+				 } ?>
 			 </select>
-                    </div></div>
+                        </div></div></div>
                     <div class="row">
                     <div class="col-lg-6 ol-xs-6"> 
                 <label>เหตุผลการลาออก/สถานที่ย้ายไป/มาช่วยราชการ/ไปช่วยราชการ &nbsp;</label>
@@ -339,7 +357,7 @@ if(isset($method)=='edit'){
                     <div class="row">
                     <div class="col-lg-3 ol-xs-12"> 
                 <label>วันที่ ย้าย/ลาออก/ไปช่วยราชการ &nbsp;</label>
-                <input value='<?php if(isset($_REQUEST['method'])){ echo $edit_person['dateEnd'];}?>' type="date" class="form-control" name="movedate" id="movedate" placeholder="รูปแบบ 2015-01-31" onkeydown="return nextbox(event, 'Submit')">
+                <input value='<?php if(isset($_REQUEST['method'])){ echo $edit_person['dateEnd'];}?>' type="text" class="form-control" name="movedate" id="datepicker4" placeholder="รูปแบบ 2015-01-31" onkeydown="return nextbox(event, 'Submit')">
                     </div></div>
                 </div>
                 </div>
