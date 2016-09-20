@@ -37,7 +37,7 @@ if(isset($method)=='edit'){
                                 $conn_DB2->close_PDO();
 }
 ?>
-<form class="" role="form" action='process/prcperson.php' enctype="multipart/form-data" method='post' onSubmit="return Check_txt()">
+<form class="" role="form" action='index.php?page=process/prcperson' enctype="multipart/form-data" method='post' onSubmit="return Check_txt()">
 <div class="row">
           <div class="col-lg-12">
                 <div class="box box-success box-solid collapsed-box">

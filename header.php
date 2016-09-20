@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ระบบข้อมูลบุคคลากรโรงพยาบาล</title>
     <LINK REL="SHORTCUT ICON" HREF="<?= $fol.$pic?>">
@@ -104,10 +104,11 @@ function nextbox(e, id) {
                       $cod_popup="window.open('content/pop_$popup_name.php?date=$date&id=$id','','width=470,height=450'); return false;";
                      }
 
-                     function insert_date(&$take_date_conv,&$take_date)
+                     function insert_date($take_date_conv,$take_date)
                     {
                         $take_date=explode("/",$take_date_conv);
 			 $take_date_year=$take_date[2]-543;
 			 $take_date="$take_date_year-$take_date[1]-$take_date[0]";
+                         return $take_date;
                     }
 ?>

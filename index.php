@@ -57,4 +57,6 @@ if (isset($_SESSION['user'])) {
 <?php } ?>
 
 
-<?php require 'footer.php'; ?>
+<?php 
+require 'menu_footer.php';
+require 'footer.php'; ?>

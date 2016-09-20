@@ -1,4 +1,3 @@
-<?php include 'header.php';?>
 <section class="content">
 <?php
 echo	 "<p>&nbsp;</p>	"; 
@@ -20,7 +19,7 @@ echo "<div class='alert alert-dismissable alert-success'>
     $sex = $_POST['sex'];
     $take_date_conv = $_POST['bday'];
     $bday='';
-    insert_date($take_date_conv,$bday);
+    $bday = insert_date($take_date_conv,$bday);
     $address = $_POST['address'];
     $hname = $_POST['hname'];
     $Province = $_POST['province'];
@@ -39,13 +38,13 @@ echo "<div class='alert alert-dismissable alert-success'>
     $educat = $_POST['educat'];
     $swday_conv = $_POST['swday'];
     $swday ='';
-    insert_date($swday_conv,$swday);
+    $swday = insert_date($swday_conv,$swday);
     $teducat = $_POST['teducat'];
     $major = $_POST['major'];
     $inst = $_POST['inst'];
     $grad_conv = $_POST['Graduation'];
     $grad='';
-    insert_date($grad_conv,$grad);
+    $grad = insert_date($grad_conv,$grad);
     $statusw = $_POST['statusw'];
     $reason = $_POST['reason'];
     $movedate = $_POST['movedate'];
@@ -157,4 +156,3 @@ $edit = mysqli_query($db,"update emppersonal set pid='$empid', idcard='$cid', pc
 }
 ?>
 </section>
-<?phpinclude 'footer.php';?>
